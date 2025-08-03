@@ -14,17 +14,24 @@ class CustomTrainer(DetectionTrainer):
 
     def get_transforms(self):
         transformations = A.Compose([
-            A.RandomBrightnessContrast(p=0.5),
+            # Улучшение контраста и адаптация к освещению
+            A.CLAHE(clip_limit=4.0, tile_grid_size=(8, 8), p=0.3),
+            A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=0.3),
+            A.HueSaturationValue(hue_shift_limit=10, sat_shift_limit=15, val_shift_limit=10, p=0.3),
+
+            # Легкий шум и артефакты камеры/компрессии
+            A.ISONoise(color_shift=(0.01, 0.05), intensity=(0.1, 0.3), p=0.3),
+            A.ImageCompression(quality_range=(50, 95), p=0.3),
             A.Blur(blur_limit=3, p=0.1),
-            A.HueSaturationValue(p=0.5),
-            A.RandomFog(p=0.2),
-            A.ISONoise(p=0.3),
-            A.ImageCompression(),
+            SaltAndPepperNoise(),
+
+            # Эмуляция реальных условий съёмки
             A.RandomShadow(p=0.2),
-            A.RandomSnow(p=0.1),
-            SaltAndPepperNoise(),  # твоя аугментация
+            A.RandomFog(alpha_coef=0.1, fog_coef_range=(0.1, 0.6), p=0.2),
+            A.RandomRain(blur_value=2, drop_length=10, drop_width=1, p=0.15),
+            A.RandomSnow(brightness_coeff=1.5, snow_point_range=(0.05, 0.15), p=0.1)
         ], bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
-        print("✅ Albumentations трансформы установлены!")
+
         return Albumentations(transformations)
 
 
@@ -43,9 +50,6 @@ test: images/test
 
 names:
   0: person
-
-names:
-  0: person
 """
 
     with open("human.yaml", "w", encoding="utf-8") as f:
@@ -55,13 +59,13 @@ names:
 
     # Конфигурация тренировки
     overrides = {
-        "model": "yolov8s.pt",  # здесь можно поставить best.pt
+        "model": "yolo8s.pt",  # здесь надо поставить best.pt
         "data": "human.yaml",
-        "imgsz": 480,  # размер картинки лучше 640, это я на свой слабый ноут поставила для теста
+        "imgsz": 640,
         "epochs": 100,
-        "device": "mps",  # cuda канешна надо
+        "device": "cuda",
         "optimizer": "AdamW",
-        "conf": 0.3,  # больше 0.4 брать не будем, можем потерять важные данные, 0.3-0.4 надо нам брать, кажется
+        "conf": 0.2,  # оказалось, что есть люди с 0.27...
         "lr0": 1e-4,
         "single_cls": True,
         "patience": 0,
