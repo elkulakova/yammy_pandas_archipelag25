@@ -63,6 +63,7 @@ names:
         "data": "human.yaml",
         "imgsz": 640,
         "epochs": 100,
+        "batch": 32,
         "device": "cuda",
         "optimizer": "AdamW",
         "conf": 0.2,  # оказалось, что есть люди с 0.27...
@@ -73,7 +74,7 @@ names:
         "pretrained": True,
         "workers": 12,
         "augment": True,
-        "mosaic": 1.0,
+        "mosaic": 0.5,
         "mixup": 0.2
     }
 
