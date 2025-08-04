@@ -59,7 +59,7 @@ names:
 
     # Конфигурация тренировки
     overrides = {
-        "model": "yolo8s.pt",  # здесь надо поставить best.pt
+        "model": "best.pt",
         "data": "human.yaml",
         "imgsz": 640,
         "epochs": 100,
@@ -71,11 +71,13 @@ names:
         "single_cls": True,
         "patience": 0,
         "verbose": True,
-        "pretrained": True,
+        "pretrained": False, # а тут нам надо загрузить веса нашей модели, а не коко
+        "resume": False, # это будет тру только при last.pt, не best.pt
         "workers": 12,
         "augment": True,
-        "mosaic": 0.5,
-        "mixup": 0.2
+        "mosaic": 0.8,
+        "mixup": 0.3,
+        "cutmix": 0.15
     }
 
     # Запускаем тренировку
