@@ -83,6 +83,9 @@ names:
         "pretrained": False,  # а тут нам надо загрузить веса нашей модели, а не коко
         "resume": False,  # это будет тру только при last.pt, не best.pt
         "workers": 12,
+        "amp": True,
+        "deterministic": False,
+        "overlap_mask": False,
         "augment": True,
         "mosaic": 0.8,
         "mixup": 0.3,
