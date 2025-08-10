@@ -74,11 +74,10 @@ names:
         "lrf": 1e-5,  # конечный learning rate, к нему в итоге примерно придет в конце обучения
         "cos_lr": False,
         # вот эта штука скорее нацелена на плавное снижение скорости обучения, а не на стабилизацию, поэтому кикаем
-        # "linear_lr": True,          # включаем OneCycle, эта штука поможет стабилизировать веса модели и избежать стагнации при обучении
         "warmup_epochs": 3,
         "warmup_bias_lr": 1e-2,  # это для смещения, не для всего набора данных
         "single_cls": True,
-        "patience": 0,
+        "patience": 4,
         "verbose": True,
         "pretrained": False,  # а тут нам надо загрузить веса нашей модели, а не коко
         "resume": False,  # это будет тру только при last.pt, не best.pt
@@ -88,6 +87,7 @@ names:
         "overlap_mask": False,
         "augment": True,
         "mosaic": 0.8,
+        "close_mosaic": 0,
         "mixup": 0.3,
         "cutmix": 0.15
     }
