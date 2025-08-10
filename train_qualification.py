@@ -76,7 +76,7 @@ albumentations:
 
 
 
-    model = YOLO("yolov8s.pt")
+    model = YOLO("yolov8n.pt")
 
     # Обучение
     train_results = model.train(
